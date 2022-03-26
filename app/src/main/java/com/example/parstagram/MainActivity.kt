@@ -8,13 +8,15 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import androidx.core.content.FileProvider
 import com.parse.*
 import java.io.File
+import android.widget.ProgressBar
+
+
+
 
 /**
 * Activity to create a post by taking the photo with their camera
@@ -22,6 +24,7 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
+    private var progressBar: ProgressBar? = null
     val CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034
     val photoFileName = "photo.jpg"
     var photoFile: File? = null
@@ -41,7 +44,10 @@ class MainActivity : AppCompatActivity() {
             val description = findViewById<EditText>(R.id.description).text.toString()
             val user = ParseUser.getCurrentUser()
             if (photoFile != null) {
+                progressBar = findViewById<ProgressBar>(R.id.progressBar) as ProgressBar
+                progressBar!!.visibility = ProgressBar.VISIBLE
                 submitPost(description, user, photoFile!!)
+
             }else{
                 Log.e(TAG, "photoFile is null")
                 Toast.makeText(this, "Photo  was not taken successfully", Toast.LENGTH_SHORT).show()
@@ -53,7 +59,19 @@ class MainActivity : AppCompatActivity() {
             onLaunchCamera()
         }
 
+        findViewById<Button>(R.id.btnLogout).setOnClickListener {
+            //Launch the camera for the user to take picture
+            ParseUser.logOut()
+            goToLoginActivity()
+        }
+
         queryPosts()
+    }
+
+    private fun goToLoginActivity() {
+        val intent = Intent(this@MainActivity, LoginActivity::class.java)
+        startActivity(intent)
+        finish()   //closes the MainActivity, avoiding going back to main page on clicking back
     }
 
     // Sends the post object to the Parse Server
@@ -68,10 +86,10 @@ class MainActivity : AppCompatActivity() {
                 // Something went wrong
                 Log.e(TAG, "Error while saving post")
                 exception.printStackTrace()
-                //TODO: Add toast
                 Toast.makeText(this, "Submit post failed", Toast.LENGTH_SHORT).show()
             }else{
                 Log.i(TAG, "Successfully saved post!")
+                progressBar!!.visibility = ProgressBar.INVISIBLE
                 findViewById<EditText>(R.id.description).getText().clear();
                 findViewById<ImageView>(R.id.imageView).setImageResource(0);
             }
