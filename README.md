@@ -41,6 +41,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
+1. In the required story pull to refresh, I was facing issue figuring out the endpoint to the Async HTTP instance.
 
 ## Open-source libraries used
 
@@ -100,7 +101,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
-1. In the required story pull to refresh, I was facing issue figuring out the endpoint to the Async HTTP instance.
+
 
 ## Open-source libraries used
 
